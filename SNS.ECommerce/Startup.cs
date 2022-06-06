@@ -22,6 +22,7 @@ namespace SNS.ECommerce
         {
             services.AddControllersWithViews();
             services.AddScoped<IProductServices, ProductService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddDbContext<ApplicationContext>(options =>
                                      options.UseSqlServer("Server=localhost;Database=SitNSleep;Trusted_Connection=True;"));
         }
@@ -40,7 +41,7 @@ namespace SNS.ECommerce
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Product}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Index}/{id?}");
             });
         }
     }
