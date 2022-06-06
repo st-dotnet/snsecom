@@ -27,11 +27,38 @@ namespace SNS.ECommerce.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Upload csv file
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public IActionResult UploadFile(IFormFile file)
         {
-            var response = _productServices.UploadXLSXFile(file);
+            var response = _productServices.UploadCSVFile(file);
             return Json(response);
         }
 
+        /// <summary>
+        /// Get product by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetProduct(int id)
+        {
+            var response = _productServices.GetProductById(id);
+            return Json(response);
+        }
+
+        /// <summary>
+        /// Update product by id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult UpdateProduct(ProductModel model)
+        {
+            return Json(_productServices.UpdateProductById(model));
+        }
     }
 }

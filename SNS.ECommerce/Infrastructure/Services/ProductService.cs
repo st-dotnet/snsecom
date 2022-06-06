@@ -18,7 +18,6 @@ namespace SNS.ECommerce.Infrastructure.Services
         {
             _dbContext = dbContext;
         }
-
         #region Public Methods
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace SNS.ECommerce.Infrastructure.Services
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public bool UploadXLSXFile(IFormFile file)
+        public bool UploadCSVFile(IFormFile file)
         {
             try
             {
@@ -76,7 +75,42 @@ namespace SNS.ECommerce.Infrastructure.Services
             {
                 throw new Exception(ex.Message);
             }
-            
+        }
+
+        /// <summary>
+        /// Get product by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ProductModel GetProductById(int id)
+        {
+            try
+            {
+                return _dbContext.Products.Where(x => x.ProductId == id).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update product by id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateProductById(ProductModel model)
+        {
+            try
+            {
+                _dbContext.Products.Update(model);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         #endregion

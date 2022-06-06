@@ -7,8 +7,16 @@ namespace SNS.ECommerce.Infrastructure.Interfaces
 {
     public interface IProductServices
     {
+        //Get all products
         List<ProductModel> GetProductList();
 
-        bool UploadXLSXFile(IFormFile file); 
+        //Get product by id
+        ProductModel GetProductById(int id);
+
+        //Upload csv file
+        bool UploadCSVFile(IFormFile file);
+
+        //Update product by id
+        bool UpdateProductById(ProductModel model);
     }
 }
