@@ -1,0 +1,82 @@
+﻿<div id="uploadFileModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div>
+                @using (Html.BeginForm("UploadFile", "Product", FormMethod.Post, new { enctype = "multipart/form-data", role = "form", id = "formUploadFile" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group border-bottom-row">
+                            <div class="custom-row p-0">
+                                <div class="col-xs-12 col-lg-4">
+                                    <label class="control-label pt-0 mb-0">Upload Excel File</label>
+                                </div>
+                                <div class="col-xs-12 col-lg-8">
+                                    <input type="file" id="FileTestUpload" name="file" class="form-control custom-file-hidden" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Close</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#ProductTable").DataTable({
+            });
+        });
+    </script>
+    <script>
+        $(document).on("click", "a#btnUplaodFile", function () {
+            $("#uploadFileModal").show();
+        });
+        $(".closeModal").click(function () {
+            $("#uploadFileModal").hide();
+        });
+
+        $(".closeModal").on("click")
+        $("#formUploadFile").submit(function (e) {
+            debugger;
+            form = this;
+            ctrl = $(this);
+            e.preventDefault();
+            var formData = new FormData(form);
+
+            var fileUploaded = document.forms['formUploadFile']['FileTestUpload'].files.length > 0;
+            if (!fileUploaded) {
+                alert("Please select file");
+                return;
+            }//if
+            $.ajax({
+                type: "POST",
+                url: ctrl.attr("action"),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data) {
+                        alert("Uploaded");
+                    } else {
+                        alert("Error");
+                    }
+                }
+
+            });
+        });
+    </script>
+
+}

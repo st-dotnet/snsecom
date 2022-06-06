@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid bg-light d-sm-flex">
@@ -15,24 +14,26 @@
                data-toggle="popover" data-html="true"
                data-content="Login with:<br>Email: <br>Password: "></i>
 
-            <form method="post" asp-antiforgery="true" class="text-left">
-
-                <input type="hidden" asp-for="ReturnUrl" />
-
-                <div class="py-7">Email</div>
-                <input type="text" asp-for="Email" class="form-control" placeholder="Email" />
-                <span asp-validation-for="Email"></span>
+            <div class="py-7">Email</div>
+            <input type="text" asp-for="Email" class="form-control" placeholder="Email" />
+            <span asp-validation-for="Email"></span>
 
 
-                <div class="pt-15 pb-7">Password</div>
-                <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
-                <span asp-validation-for="Password"></span>
+            <div class="pt-15 pb-7">Password</div>
+            <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+            <span asp-validation-for="Password"></span>
 
-                <input class="btn btn-primary btn-block mt-25" type="submit" value="Log in" />
+            <button class="btn btn-primary btn-block mt-25" id="loginForm" type="button" value="Log in">Log in</button>
 
-                <div class="mt-15"><a href="/forgot">Forgot your password?</a></div>
-            </form>
-
+            <div class="mt-15"><a href="/forgot">Forgot your password?</a></div>
         </div>
     </div>
 </div>
+@section Scripts{
+
+    <script src="~/Scripts/login.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script>
+        loginIndex.init();
+    </script>
+}
