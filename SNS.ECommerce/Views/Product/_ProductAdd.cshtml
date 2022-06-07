@@ -1,50 +1,49 @@
-﻿
-<style>
-    #productDetailModal .modal-header button.close 
-    {
+﻿<style>
+    #productAddModal .modal-header button.close {
         background-color: transparent;
         border: 0;
         -webkit-appearance: none;
     }
-    #productDetailModal .modal-header button.close span{
-    font-size:24px;
+
+    #productAddModal .modal-header button.close span {
+        font-size: 24px;
     }
 </style>
-<div class="modal" id="productDetailModal" tabindex="-1" role="dialog">
+<div class="modal" id="productAddModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Product Detail</h5>
-                <button type="button" class="close closeEditModal" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Product Edit Detail</h5>
+                <button type="button" class="close addProductModalClose" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="productHdnId" name="">
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">SKU:</label>
-                    <input type="text" class="form-control" name="name" id="productSKU" />
+                    <input type="text" class="form-control" name="name" id="addproductSKU" />
                 </div>
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Price:</label>
-                    <input type="text" class="form-control" name="name" id="productPrice" />
+                    <input type="text" class="form-control" name="name" id="addproductPrice" />
                 </div>
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Quantity:</label>
-                    <input type="text" class="form-control" name="name" id="productQuantity" />
+                    <input type="text" class="form-control" name="name" id="addproductQuantity" />
                 </div>
 
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Description:</label>
-                    <textarea name="name" class="form-control" id="productDescription"></textarea>
+                    <textarea name="name" class="form-control" id="addproductDescription"></textarea>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeEditModal" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="productAdd">Save</button>
+                <button type="button" class="btn btn-secondary addProductModalClose" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -113,6 +113,44 @@ namespace SNS.ECommerce.Infrastructure.Services
             }
         }
 
+        public bool DeleteProducts(int Id)
+        {
+            try
+            {
+                var data = _dbContext.Products.Where(x => x.ProductId == Id).FirstOrDefault();
+                if (data == null)
+                    throw new NullReferenceException();
+                _dbContext.Products.Remove(data);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Add Products
+        /// </summary>
+        /// <param name="productModel"></param>
+        /// <returns></returns>
+        public bool AddProduct(ProductModel productModel)
+        {
+            try
+            {
+                _dbContext.Products.Add(productModel);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
         #endregion
 
         #region Private methods

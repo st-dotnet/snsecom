@@ -60,5 +60,26 @@ namespace SNS.ECommerce.Web.Controllers
         {
             return Json(_productServices.UpdateProductById(model));
         }
+        /// <summary>
+        /// Delete product by id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public IActionResult Delete(int Id)
+        {
+            var response = _productServices.DeleteProducts(Id);
+            return Json(response);
+        }
+        /// <summary>
+        /// Create product 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Create(ProductModel productModel)
+        {
+            return Json(_productServices.AddProduct(productModel));
+        }
+       
     }
 }
