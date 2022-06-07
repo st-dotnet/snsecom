@@ -18,5 +18,11 @@ namespace SNS.ECommerce.Infrastructure.Interfaces
 
         //Update product by id
         bool UpdateProductById(ProductModel model);
+
+        //delete product by id
+        bool DeleteProducts(int Id);
+
+        //Add product
+        bool AddProduct(ProductModel productModel);
     }
 }
