@@ -18,6 +18,26 @@
         });
     };
 
+    var deleteProduct = function () {
+        var id = $("#productHdnDeleteId").val();
+        $.ajax({
+            type: "DELETE",
+            url: "/Product/DeleteProduct/" + id,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data) {
+                    alert("Product Deleted Sucecssfully");
+                    $("#productDetailModal").hide();
+                }
+                else {
+                    alert("Error");
+                }
+            }
+        });
+    };
+
     var updateProduct = function () {
         debugger;
         var postData = {
@@ -34,7 +54,7 @@
                  success: function (data) {
                      if (data) {
                          debugger;
-                         $("#productDetailModal").hide();
+                         $("#productDeleteModal").hide();
                      }
                      else {
                          alert("Not Updated");
@@ -52,6 +72,12 @@
                 editProduct($(this));
             });
 
+            //Delete Product
+            $(document).on("click", "#deleteProductId", function () {
+                deleteProduct($(this));
+            });
+
+            
             //update product detail
             $(document).on("click", "#updateProduct", function () {
                 updateProduct($(this));
@@ -67,8 +93,25 @@
                 $("#uploadFileModal").show();
             });
 
+            //Close the Edit modal
             $(document).on("click", ".closeEditModal", function () {
                 $("#productDetailModal").hide();
+            });
+
+            //close the Delete Modal by 'x' icon
+            $(document).on("click", "#closeModal", function () {
+                $("#productDeleteModal").hide();
+            });
+
+            //close the Delete Modal By Button
+            $(document).on("click", "#closeDeleteModalBtn", function () {
+                $("#productDeleteModal").hide();
+            });
+
+            //Delete product modal show
+            $(document).on("click", "#deleteProduct", function () {
+                $("#productHdnDeleteId").val($(this).attr("data-productid"));
+                $("#productDeleteModal").show();
             });
         }
     };

@@ -71,7 +71,8 @@
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = product.ProductId }) |
                         <a href="#" id="productDetail" data-id="@product.ProductId" value="Detail"><i class="fas fa-edit"></i> Detail </a> |
-                        @Html.ActionLink("Delete", "Delete", new { id = product.ProductId })
+                        @*@Html.ActionLink("Delete", "Delete", new { id = product.ProductId })*@
+                        <a href="#" id="deleteProduct" data-productid="@product.ProductId">Delete</a>
                     </td>
                 </tr>
             }
@@ -90,11 +91,12 @@
             <div>
                 @using (Html.BeginForm("UploadFile", "Product", FormMethod.Post, new { enctype = "multipart/form-data", role = "form", id = "formUploadFile" }))
                 {
-                    <div class="modal-body">
+                    <div class="modal-body" id="csv">
                         <div class="form-group border-bottom-row">
                             <div class="custom-row p-0">
                                 <div class="col-xs-12 col-lg-4">
-                                    <label class="control-label pt-0 mb-2">Upload Excel File</label>
+                                    <label class="control-label pt-0 mb-2">
+                                    Excel File</label>
                                 </div>
                                 <div class="col-xs-12 col-lg-8">
                                     <input type="file" id="FileTestUpload" name="file" class="form-control custom-file-hidden" />
@@ -104,7 +106,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" id="formUploadFile" class="btn btn-primary">Save changes</button>
                         <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Close</button>
                     </div>
                 }
@@ -115,6 +117,8 @@
 
 @Html.Partial("_ProductDetail")
 
+@Html.Partial("_ProductDelete")
+
 @section Scripts {
     <script src="~/Scripts/product.js"></script>
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
@@ -124,7 +128,9 @@
             });
         });
     </script>
-    <script>
+
+    
+    @*<script>
 
         $("#formUploadFile").submit(function (e) {
             debugger;
@@ -137,7 +143,7 @@
             if (!fileUploaded) {
                 alert("Please select file");
                 return;
-            }//if
+            }
             $.ajax({
                 type: "POST",
                 url: ctrl.attr("action"),
@@ -154,7 +160,49 @@
                 }
             });
         });
-    </script>
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        $('#formUploadFile').click(function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#FileUpload1").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', "Manas");
+
+                $.ajax({
+                    url: '/Product/UploadFile',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+    });
+
+    
     <script>
         productIndex.init()</script>
 }

@@ -14,21 +14,35 @@
                data-toggle="popover" data-html="true"
                data-content="Login with:<br>Email: <br>Password: "></i>
 
-            <div class="py-7">Email</div>
-            <input type="text" asp-for="Email" class="form-control" placeholder="Email" />
-            <span asp-validation-for="Email"></span>
+            <form method="post" asp-antiforgery="true" class="text-left">
+
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <div class="py-7">Email</div>
+                <input type="text" asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email"></span>
 
 
-            <div class="pt-15 pb-7">Password</div>
-            <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
-            <span asp-validation-for="Password"></span>
+                <div class="pt-15 pb-7">Password</div>
+                <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password"></span>
 
-            <button class="btn btn-primary btn-block mt-25" id="loginForm" type="button" value="Log in">Log in</button>
+                <input class="btn btn-primary btn-block mt-25" type="submit" value="Log in" />
 
-            <div class="mt-15"><a href="/forgot">Forgot your password?</a></div>
+                <div class="mt-15"><a href="/forgot">Forgot your password?</a></div>
+            </form>
+
         </div>
     </div>
+    <div class="ml-auto w-sm-50 text-white p-20" style="height: 725px; background: url() no-repeat; background-image: url('~/images/login.jpg'); ">
+        <h2>Sit N' Sleep</h2>
+    </div>
 </div>
+
+
+
+
+
 @section Scripts{
 
     <script src="~/Scripts/login.js"></script>
@@ -37,3 +51,4 @@
         loginIndex.init();
     </script>
 }
+

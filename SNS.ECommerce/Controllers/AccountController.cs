@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SNS.ECommerce.Infrastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SNS.ECommerce.Controllers
@@ -21,11 +18,18 @@ namespace SNS.ECommerce.Controllers
             return View();
         }
 
-        [HttpPost("")]
-        public async Task<string> LogIn(string email, string password)
+        [HttpPost]
+        public async Task<bool> LogIn(string email, string password)
         {
             var response = await _accountService.LogIn(email, password);
-            return response;
+            if(response == "true")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

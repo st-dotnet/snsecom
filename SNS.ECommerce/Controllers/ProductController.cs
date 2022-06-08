@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using SNS.ECommerce.Infrastructure.Interfaces;
@@ -6,6 +7,7 @@ using SNS.ECommerce.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -14,10 +16,12 @@ namespace SNS.ECommerce.Web.Controllers
     public class ProductController : Controller
     {
         private readonly IProductServices _productServices;
+        private IHostingEnvironment _Environment;
 
-        public ProductController(IProductServices productServices)
+        public ProductController(IProductServices productServices, IHostingEnvironment Environment)
         {
             _productServices = productServices;
+            _Environment = Environment;
         }
         public IActionResult Index()
         {
@@ -32,9 +36,16 @@ namespace SNS.ECommerce.Web.Controllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public IActionResult UploadFile(IFormFile file)
+        //public IActionResult UploadFile(IFormFile file)
+        //{
+        //    var response = _productServices.UploadCSVFile(file);
+        //    return Json(response);
+        //}
+
+        [HttpPost]
+        public IActionResult UploadFile(IFormFile postedFile)
         {
-            var response = _productServices.UploadCSVFile(file);
+            var response = _productServices.UploadCSVFile(postedFile);
             return Json(response);
         }
 
@@ -60,5 +71,19 @@ namespace SNS.ECommerce.Web.Controllers
         {
             return Json(_productServices.UpdateProductById(model));
         }
+
+        /// <summary>
+        /// Delete product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public IActionResult DeleteProduct(int id)
+        {
+            return Json(_productServices.DeleteProductById(id));
+
+        }
+
+       
     }
 }
