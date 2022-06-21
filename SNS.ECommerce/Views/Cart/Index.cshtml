@@ -1,0 +1,268 @@
+﻿@{
+    Layout = "_Layout";
+}
+<style>
+
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+
+        .button-container .form-control {
+            max-width: 80px;
+            text-align: center;
+            display: inline-block;
+            margin: 0px 5px;
+        }
+
+    #myTable .form-control {
+        width: auto;
+        display: inline-block;
+    }
+
+    .cart-qty-plus,
+    .cart-qty-minus {
+        width: 38px;
+        height: 38px;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+
+        .cart-qty-plus:hover,
+        .cart-qty-minus:hover {
+            background-color: #5161ce;
+            color: #fff;
+        }
+
+    .img-prdct {
+        width: 50px;
+        height: 50px;
+        /*  background-color: #5161ce; */
+        border-radius: 4px;
+    }
+
+        .img-prdct img {
+            width: 100%;
+        }
+</style>
+
+<section class="h-100 h-custom">
+    <div class="container h-100 py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="table-responsive">
+                    <div class="col-xs-12">
+                        <p style="font-family:Verdana;float:right;">Shopping Cart <i class="fa fa-shopping-cart"></i></p>
+                    </div>
+                    <table id="myTable" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+
+                                <th scope="col">SKU</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cartItem in ViewBag.CartList)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="@cartItem.Product.url" style="height:400px;width:400px;" class="d-inline-block img-fluid mb-4" alt="@cartItem.Product.SKU">
+                                        </div>
+                                        <div class="d-block">
+                                            <a class="btn btn-success text-white cartRemove" id="removeCart" data-id="@cartItem.CartId">
+                                                <i class="bi bi-cart-plus"></i> Remove
+                                            </a>
+                                            <a class="btn btn-success text-white orderPlace" id="placeOrder" data-id="@cartItem.CartId">
+                                                <i class="bi bi-cart-plus"></i> Place Order
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <p class="mb-0" style="font-weight: 500;">@cartItem.Product.SKU</p>
+                                    </td>
+                                    <td class="align-middle">
+                                        <p class="mb-0" style="font-weight: 500;">@cartItem.Product.Description</p>
+                                    </td>
+                                    <td>
+                                        <div class="button-container">
+                                            <button class="cart-qty-plus" type="button" value="+" minusCart-id="@cartItem.Product.ProductId">+</button>
+                                            <input type="text" name="qty" min="1" class="qty form-control" value="@cartItem.Count" disabled />
+                                            <button class="cart-qty-minus" type="button" value="-" plusCart-id="@cartItem.Product.ProductId">-</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@cartItem.Product.Price" class="price form-control" disabled>
+                                    </td>
+                                    <td align="right">$ <span id="amount" class="amount">0</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (ViewBag.CartList.Count == 0)
+                {
+                    <div class="container-fluid  mt-100">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Cart</h5>
+                                    </div>
+                                    <div class="card-body cart">
+                                        <div class="col-sm-12 empty-cart-cls text-center">
+                                            <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                                            <h3><strong>Your Cart is Empty</strong></h3>
+                                            <h4>Add something to make me happy :)</h4>
+                                            <a href="#" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+
+
+                    <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-lg-4 col-xl-4" style="float:right;">
+                                    <div class="d-flex justify-content-between" style="font-weight: 500;">
+                                        <p class="mb-2">Subtotal</p>
+                                        <p>$<span id="total" class="total">0</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span>Checkout</span> $<span id="checkout" class="checkout">$0</span>
+                            </button>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <script src="~/Scripts/product.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            var rowCount = $('#myTable >tbody >tr').length;
+            update_amounts();
+            $('.qty, .price').on('keyup keypress blur change', function (e) {
+                update_amounts();
+            });
+
+            function update_amounts()
+            {
+
+                var sum = 0.0;
+                $('#myTable > tbody  > tr').each(function () {
+
+                    var qty = $(this).find('.qty').val();
+                    var price = $(this).find('.price').val();
+                    var amount = (qty * price)
+                    sum += amount;
+                    $(this).find('.amount').text('' + amount);
+                });
+                $('.total').text(sum);
+                $('.checkout').text(''+sum);
+                $('.fa-shopping-cart').text(' '+rowCount);
+
+            }
+
+
+            function incrementQty() {
+                var prdid = $(this).attr("plusCart-id");
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Cart/AddItemToShoppingCart/"+prdid,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                    }
+                });
+            }
+
+            function decrementQty() {
+                var prdid = $(this).attr("minusCart-id");
+                $.ajax({
+                    type: "GET",
+                    url: "/Cart/DeleteCartItem/"+prdid,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                    }
+                });
+            }
+
+            $('.cartRemove').on('click', function ()
+            {
+
+               //  alert($(this).attr("data-id"));
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    type: "GET",
+                    url: "/Cart/DeleteCart/"+id,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        location.reload();
+                        /*window.location.href = '/Client/Index';*/
+                    }
+                });
+            });
+           
+
+            var incrementQty;
+            var decrementQty;
+            var plusBtn = $(".cart-qty-plus");
+            var minusBtn = $(".cart-qty-minus");
+            var incrementQty = plusBtn.click(function () {
+
+                var $n = $(this)
+                    .parent(".button-container")
+                    .find(".qty");
+                $n.val(Number($n.val()) + 1);
+                update_amounts();
+                incrementQty();
+
+            });
+
+            var decrementQty = minusBtn.click(function () {
+                var $n = $(this)
+                    .parent(".button-container")
+                    .find(".qty");
+                var QtyVal = Number($n.val());
+                if (QtyVal > 0) {
+                    $n.val(QtyVal - 1);
+                }
+                update_amounts();
+                decrementQty();
+            });
+        });
+    </script>
+    <script>
+        productIndex.init()
+    </script>
+}

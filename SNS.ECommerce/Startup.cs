@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
+using SNS.ECommerce.Infrastructure;
 
 namespace SNS.ECommerce
 {
@@ -32,6 +35,7 @@ namespace SNS.ECommerce
             services.AddControllersWithViews();
             services.AddScoped<IProductServices, ProductService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICartService, CartService>();
             services.AddDbContext<ApplicationContext>(options =>
                                      options.UseSqlServer(configuration.GetConnectionString("SNSConnection")));
             services.AddDirectoryBrowser();
@@ -42,6 +46,7 @@ namespace SNS.ECommerce
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +62,7 @@ namespace SNS.ECommerce
             app.UseRouting();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseNotyf();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
@@ -68,6 +74,12 @@ namespace SNS.ECommerce
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
                 RequestPath = new PathString("/Images")
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Sites")),
+                RequestPath = new PathString("/Sites")
             });
 
             app.UseEndpoints(endpoints =>

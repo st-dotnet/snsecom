@@ -1,52 +1,53 @@
-﻿
-<style>
-    #productDetailModal .modal-header button.close 
-    {
+﻿<style>
+    #productEditModal .modal-header button.close {
         background-color: transparent;
         border: 0;
         -webkit-appearance: none;
     }
-    #productDetailModal .modal-header button.close span{
-    font-size:24px;
-    }
+
+        #productEditModal .modal-header button.close span {
+            font-size: 24px;
+        }
 </style>
-<div class="modal" id="productDetailModal" tabindex="-1" role="dialog">
+<div class="modal" id="productEditModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Product Detail</h5>
-                <button type="button" class="close closeEditModal" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Product Edit Detail</h5>
+                <button type="button" class="close editProductModalClose" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="productHdnId" name="">
+                <input type="hidden" id="editproductHdnId" name="">
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">SKU:</label>
-                    <input type="text" class="form-control" name="name" id="productSKU" />
+                    <input type="text" class="form-control" name="name" id="editproductSKU" />
                 </div>
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Price:</label>
-                    <input type="text" class="form-control" name="name" id="productPrice" />
+                    <input type="text" class="form-control" name="name" id="editproductPrice" />
                 </div>
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Quantity:</label>
-                    <input type="text" class="form-control" name="name" id="productQuantity" />
+                    <input type="text" class="form-control" name="name" id="editproductQuantity" />
                 </div>
 
 
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Description:</label>
-                    <textarea name="name" class="form-control" id="productDescription"></textarea>
+                    <textarea name="name" class="form-control" id="editproductDescription"></textarea>
                 </div>
 
             </div>
             <div class="modal-footer">
+
                 <button type="button" class="btn btn-primary" id="updateProduct">Save</button>
-                <button type="button" class="btn btn-secondary closeEditModal" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary editProductModalClose" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+

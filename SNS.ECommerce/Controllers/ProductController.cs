@@ -1,27 +1,25 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
 using SNS.ECommerce.Infrastructure.Interfaces;
 using SNS.ECommerce.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.IO;
 using System.Linq;
 
 namespace SNS.ECommerce.Web.Controllers
 {
     public class ProductController : Controller
     {
+
+        private readonly INotyfService _notyf;
+
         private readonly IProductServices _productServices;
         private IHostingEnvironment _Environment;
 
-        public ProductController(IProductServices productServices, IHostingEnvironment Environment)
+        public ProductController(IProductServices productServices, IHostingEnvironment Environment, INotyfService notyf)
         {
             _productServices = productServices;
             _Environment = Environment;
+            _notyf = notyf;
         }
         public IActionResult Index()
         {
@@ -36,17 +34,12 @@ namespace SNS.ECommerce.Web.Controllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        //public IActionResult UploadFile(IFormFile file)
-        //{
-        //    var response = _productServices.UploadCSVFile(file);
-        //    return Json(response);
-        //}
-
         [HttpPost]
-        public IActionResult UploadFile(IFormFile postedFile)
+        public IActionResult UploadFile()
         {
-            var response = _productServices.UploadCSVFile(postedFile);
-            return Json(response);
+            //file upload process
+            var file = Request.Form.Files[0];
+            return Json(_productServices.UploadCSVFile(file)); 
         }
 
         /// <summary>
@@ -82,8 +75,6 @@ namespace SNS.ECommerce.Web.Controllers
         {
             return Json(_productServices.DeleteProductById(id));
 
-        }
-
-       
+        }       
     }
 }

@@ -1,4 +1,25 @@
 ﻿var productIndex = function () {
+    var AddItemToCart = function (ctrl) {
+        var id = $(ctrl).attr("data-id");
+        $.ajax({
+            type: "GET",
+            url: "/Cart/AddItemToShoppingCart/" + id,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                //if (data) {
+                //    window.location.href = '/Cart/Index';
+                //}
+                //else {
+                //    alert("Not found");
+                //}
+            }
+        });
+    };
+
+
+
     var editProduct = function (ctrl) {
         var id = $(ctrl).attr("data-id");
         $.ajax({
@@ -27,9 +48,10 @@
             contentType: false,
             processData: false,
             success: function (data) {
-                if (data) {
-                    alert("Product Deleted Sucecssfully");
-                    $("#productDetailModal").hide();
+                if (data) {  
+                    $("#productDeleteModal").hide();
+                    location.reload();
+                    _notyf.Success("Product Deleted Successfully!");
                 }
                 else {
                     alert("Error");
@@ -39,7 +61,7 @@
     };
 
     var updateProduct = function () {
-        debugger;
+        
         var postData = {
             ProductId: $("#productHdnId").val(),
             SKU: $("#productSKU").val(),
@@ -53,8 +75,8 @@
                  data: postData,
                  success: function (data) {
                      if (data) {
-                         debugger;
-                         $("#productDeleteModal").hide();
+                         $("#productDetailModal").hide();
+                         location.reload();
                      }
                      else {
                          alert("Not Updated");
@@ -112,6 +134,11 @@
             $(document).on("click", "#deleteProduct", function () {
                 $("#productHdnDeleteId").val($(this).attr("data-productid"));
                 $("#productDeleteModal").show();
+            });
+
+            //addToCart
+            $(document).on("click", "#addToCart", function () {
+                AddItemToCart($(this));
             });
         }
     };

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using SNS.ECommerce.Web.Models;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SNS.ECommerce.Infrastructure.Interfaces
 {
@@ -16,15 +13,13 @@ namespace SNS.ECommerce.Infrastructure.Interfaces
         ProductModel GetProductById(int id);
 
         //Upload csv file
-        public bool UploadCSVFile(IFormFile postedFile);
+        //public bool UploadCSVFile(IFormFile postedFile);
+        bool UploadCSVFile(IFormFile file);
 
         //Update product by id
         bool UpdateProductById(ProductModel model);
 
         //Delete Product by id
-        bool DeleteProductById(int id);
-
-        
-      
+        bool DeleteProductById(int id);      
     }
 }

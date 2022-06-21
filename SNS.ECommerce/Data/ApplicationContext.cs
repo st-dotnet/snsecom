@@ -12,6 +12,7 @@ namespace SNS.ECommerce.Data
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
         public virtual DbSet<ProductModel> Products { get; set; }
         public virtual DbSet<UserModel> Users { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
     }
 }

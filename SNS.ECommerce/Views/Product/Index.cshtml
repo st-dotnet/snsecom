@@ -39,16 +39,19 @@
         }
 
 
-    #uploadFileModal a#downloadCSV{display:block;}
-
-
-
+    #uploadFileModal a#downloadCSV {
+        display: block;
+    }
 </style>
-<div class="container-fluid">
-    <div class="slick-add-image">
-        <a href="#" id="btnUplaodFile" class="plus-icon">Upload File</a>
-    </div>
 
+    
+
+    
+
+<div class="container-fluid">
+    <div class="button-upl">
+        <button type="button" id="uploadFile" class="btn btn-primary">Upload File</button>
+    </div>
 
     <table id="ProductTable" class="table table-border table-custom-list table-hover" style="width:100%">
         <thead>
@@ -69,51 +72,36 @@
                     <td>@product.Quantity</td>
                     <td>@product.Description</td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = product.ProductId }) |
-                        <a href="#" id="productDetail" data-id="@product.ProductId" value="Detail"><i class="fas fa-edit"></i> Detail </a> |
-                        @*@Html.ActionLink("Delete", "Delete", new { id = product.ProductId })*@
-                        <a href="#" id="deleteProduct" data-productid="@product.ProductId">Delete</a>
+                        <ul class="icon-actions">
+                            <li><a href="#" class="icon-edit" id="productDetail" data-id="@product.ProductId" value="Detail"> <span><i class="fa fa-pencil" aria-hidden="true"></i></span></a></li>
+                            <li><a href="#" class="icon-dele" id="deleteProduct" data-productid="@product.ProductId"><span><i class="fa fa-trash-o"></i></span></a></li>
+                        </ul>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<div id="uploadFileModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+
+
+<div class="modal" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title"> File Upload</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div>
-                @using (Html.BeginForm("UploadFile", "Product", FormMethod.Post, new { enctype = "multipart/form-data", role = "form", id = "formUploadFile" }))
-                {
-                    <div class="modal-body" id="csv">
-                        <div class="form-group border-bottom-row">
-                            <div class="custom-row p-0">
-                                <div class="col-xs-12 col-lg-4">
-                                    <label class="control-label pt-0 mb-2">
-                                    Excel File</label>
-                                </div>
-                                <div class="col-xs-12 col-lg-8">
-                                    <input type="file" id="FileTestUpload" name="file" class="form-control custom-file-hidden" />
-                                </div>
-                                <a id="downloadCSV" class="mt-2" href="">Download CSV File</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" id="formUploadFile" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Close</button>
-                    </div>
-                }
+            <div class="modal-body">
+                <input type="file" id="IDofTheUploader" name="postedFile" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Import</button>
             </div>
         </div>
     </div>
 </div>
+
 
 @Html.Partial("_ProductDetail")
 
@@ -122,87 +110,50 @@
 @section Scripts {
     <script src="~/Scripts/product.js"></script>
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
             $("#ProductTable").DataTable({
             });
         });
     </script>
-
-    
-    @*<script>
-
-        $("#formUploadFile").submit(function (e) {
-            debugger;
-            form = this;
-            ctrl = $(this);
-            e.preventDefault();
-            var formData = new FormData(form);
-
-            var fileUploaded = document.forms['formUploadFile']['FileTestUpload'].files.length > 0;
-            if (!fileUploaded) {
-                alert("Please select file");
-                return;
-            }
-            $.ajax({
-                type: "POST",
-                url: ctrl.attr("action"),
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data) {
-                        alert("Uploaded");
-                    } else {
-                        alert("Error");
-                    }
-                }
+    <script>
+        $(function () {
+            $("#uploadFile").click(function () {
+                $("#uploadModal").modal("show");
             });
         });
-    </script>*@
+    </script>
+    <script>
+        $(function () {
 
-<script>
-    $(document).ready(function () {
-        $('#formUploadFile').click(function () {
-
-            // Checking whether FormData is available in browser
-            if (window.FormData !== undefined) {
-
-                var fileUpload = $("#FileUpload1").get(0);
+            $("#btnSave").click(function (evt) {
+                var fileUpload = $("#IDofTheUploader").get(0);
                 var files = fileUpload.files;
+                var data = new FormData();
 
-                // Create FormData object
-                var fileData = new FormData();
-
-                // Looping over all files and add it to FormData object
                 for (var i = 0; i < files.length; i++) {
-                    fileData.append(files[i].name, files[i]);
+                    data.append(files[i].name, files[i]);
                 }
-
-                // Adding one more key to FormData object
-                fileData.append('username', "Manas");
-
                 $.ajax({
-                    url: '/Product/UploadFile',
                     type: "POST",
-                    contentType: false, // Not to set any content header
-                    processData: false, // Not to process data
-                    data: fileData,
-                    success: function (result) {
-                        alert(result);
+                    url: "/Product/UploadFile",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (message) {
+                        $("#uploadModal").modal("hide");
+                        location.reload();
+
                     },
-                    error: function (err) {
-                        alert(err.statusText);
+                    error: function () {
+                        alert("There was error uploading files!");
                     }
                 });
-            } else {
-                alert("FormData is not supported.");
-            }
+            });
         });
-    });
-
-    
+    </script>
     <script>
-        productIndex.init()</script>
+        productIndex.init()
+    </script>
 }

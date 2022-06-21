@@ -16,5 +16,7 @@ namespace SNS.ECommerce.Web.Models
         public bool ShowAvailability { get; set; }
 
         public string Description { get; set; }
+
+        public string url { get; set; }
     }
 }

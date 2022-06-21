@@ -22,6 +22,7 @@ namespace SNS.ECommerce.Controllers
         public async Task<bool> LogIn(string email, string password)
         {
             var response = await _accountService.LogIn(email, password);
+            
             if(response == "true")
             {
                 return true;

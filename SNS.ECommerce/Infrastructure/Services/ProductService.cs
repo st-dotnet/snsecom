@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
 using SNS.ECommerce.Data;
 using SNS.ECommerce.Infrastructure.Interfaces;
 using SNS.ECommerce.Web.Models;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-
 
 namespace SNS.ECommerce.Infrastructure.Services
 {
@@ -41,99 +38,40 @@ namespace SNS.ECommerce.Infrastructure.Services
             }
         }
 
-        /// <summary>
-        /// Upload XLSX File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        //public bool UploadCSVFile(IFormFile file)
-        //{
-        //    try
-        //    {
-        //        List<ProductModel> productsList = new();
-        //        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        //        using (var stream = new MemoryStream())
-        //        {
-        //            file.CopyTo(stream);
-        //            stream.Position = 0;
-        //            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-        //            using ExcelPackage package = new(stream);
-        //            ExcelWorksheet workSheet = package.Workbook.Worksheets.FirstOrDefault();
-        //            int totalRows = workSheet.Dimension.Rows;
-        //            for (int i = 2; i <= totalRows; i++)
-        //            {
-        //                productsList.Add(new ProductModel
-        //                {
-        //                    SKU = workSheet.Cells[i, 1].Value.ToString(),
-        //                    Price = workSheet.Cells[i, 2].Value.ToString(),
-        //                    Quantity = Convert.ToInt32(workSheet.Cells[i, 3].Value),
-        //                    ShowAvailability = Convert.ToBoolean(workSheet.Cells[i, 4].Value),
-        //                    Description = workSheet.Cells[i, 5].Value.ToString()
-        //                });
-        //            }
-        //            _dbContext.Products.AddRange(productsList);
-        //            _dbContext.SaveChanges();
-        //        }
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
-
-        public bool UploadCSVFile(IFormFile postedFile)
+        public bool UploadCSVFile(IFormFile file)
         {
-            if (postedFile != null)
+            List<ProductModel> data = new();
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using (var stream = new MemoryStream())
             {
-                string path = Path.Combine(this._Environment.WebRootPath, "Uploads");
-                if (!Directory.Exists(path))
+                file.CopyTo(stream);
+                stream.Position = 0;
+                using (var fileStream = file.OpenReadStream())
+                using (var reader = new StreamReader(fileStream))
                 {
-                    Directory.CreateDirectory(path);
-                }
-
-                string fileName = Path.GetFileName(postedFile.FileName);
-                string filePath = Path.Combine(path, fileName);
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                {
-                    postedFile.CopyTo(stream);
-                }
-                string csvData = System.IO.File.ReadAllText(filePath);
-                DataTable dt = new DataTable();
-                bool firstRow = true;
-                foreach (string row in csvData.Split('\n'))
-                {
-                    if (!string.IsNullOrEmpty(row))
+                    reader.ReadLine();
+                    string row;
+                    while ((row = reader.ReadLine()) != null)
                     {
-                        if (!string.IsNullOrEmpty(row))
+                        if (row != "")
                         {
-                            if (firstRow)
+                            string[] rowData = row.Split(',');
+                            data.Add(new ProductModel
                             {
-                                foreach (string cell in row.Split(','))
-                                {
-                                    dt.Columns.Add(cell.Trim());
-                                }
-                                firstRow = false;
-                            }
-                            else
-                            {
-                                dt.Rows.Add();
-                                int i = 0;
-                                foreach (string cell in row.Split(','))
-                                {
-                                    dt.Rows[dt.Rows.Count - 1][i] = cell.Trim();
-                                    i++;
-                                }
-                            }
+                                SKU = rowData[0].ToString(),
+                                Price = rowData[1].ToString(),
+                                Quantity = Convert.ToInt32(rowData[2]),
+                                Description = rowData[4].ToString()
+                            });
                         }
+                        
                     }
                 }
-
-                return true;
+                _dbContext.Products.AddRange(data);
+                _dbContext.SaveChanges();
             }
-            return false;
+            return true;
         }
-
 
 
         /// <summary>
@@ -182,9 +120,9 @@ namespace SNS.ECommerce.Infrastructure.Services
             try
             {
                 var product = _dbContext.Products.Where(x => x.ProductId == id).FirstOrDefault();
-                if(product != null)
+                if (product != null)
                 {
-                    _dbContext.Remove(product);
+                    _dbContext.Products.Remove(product);
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -194,26 +132,11 @@ namespace SNS.ECommerce.Infrastructure.Services
             {
                 throw new Exception(ex.Message); ;
             }
-            
+
         }
 
-        //public bool ImportCsvFile()
-        //{
-        //    ProductModel product = new ProductModel();
-
-        //    List<object> customers = (from customer in product..ToList().Take(10)
-        //                              select new[] { customer.CustomerID.ToString(),
-        //                                                    customer.ContactName,
-        //                                                    customer.City,
-        //                                                    customer.Country
-        //                        }).ToList<object>();
-        //}
-
-
         #endregion
 
-        #region Private methods
-
-        #endregion
+       
     }
 }
